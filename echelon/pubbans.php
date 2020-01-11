@@ -38,7 +38,7 @@ $time = time();
 
 ###########################
 ######### QUERIES #########
-$query = "SELECT SQL_CACHE c.id as client_id, c.name, p.id as ban_id, p.type, p.time_add, p.time_expire, p.reason, p.duration FROM penalties p LEFT JOIN clients c ON p.client_id = c.id WHERE p.inactive = 0 AND p.type != 'Warning' AND p.type != 'Notice' AND (p.time_expire = -1 OR p.time_expire > $time)";
+$query = "SELECT c.id as client_id, c.name, p.id as ban_id, p.type, p.time_add, p.time_expire, p.reason, p.duration FROM penalties p LEFT JOIN clients c ON p.client_id = c.id WHERE p.inactive = 0 AND p.type != 'Warning' AND p.type != 'Notice' AND p.type != 'Kick' AND (p.time_expire = -1 OR p.time_expire > $time)";
 
 $query .= sprintf(" ORDER BY %s ", $orderby);
 
@@ -55,11 +55,14 @@ require 'inc/header.php';
 
 if(!$db->error) :
 ?>
+<div class="col-lg-11 mx-auto my-2">
+<div class="card my-2">
+<h5 class="card-header">Public Ban List</h5>
+<div class="card-body table table-hover table-sm table-responsive">
 
-<table summary="A list of <?php echo $limit_rows; ?> active tempbans/bans">
-	<caption>Public Ban List<small>There are <strong><?php echo $total_rows; ?></strong> active bans/tempbans for 
+<table width="100%">
 		<form action="pubbans.php" method="get" id="pubbans-form" class="sm-f-select">
-			<select name="game" onchange="this.form.submit()">
+			<select class="form-control my-2" name="game" onchange="this.form.submit()">
 				<?php
 				
 				$games_list = $dbl->getGamesList();
@@ -81,8 +84,6 @@ if(!$db->error) :
 				?>
 			</select>
 		</form>
-		</small>
-	</caption>
 <thead>
 	<tr>
 		<th>Client
@@ -128,7 +129,7 @@ if($num_rows > 0) : // query contains stuff
 		$time_expire_read = timeExpirePen($time_expire);
 		$time_add_read = date($tformat, $time_add);
 		$reason_read = removeColorCode($reason);
-		
+
 		if($mem->loggedIn())
 			$client_name_read = clientLink($client_name, $client_id);
 		else
@@ -161,7 +162,7 @@ endif;
 ?>
 </tbody>
 </table>
-
+</div></div></div>
 <?php 
 	endif; // db error
 

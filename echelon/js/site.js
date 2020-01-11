@@ -152,7 +152,7 @@ this.tooltip = function(){
 	yOffset = 20;				
 	$("a.tooltip").hover(function(e){											  
 		this.t = this.title;
-		this.title = "";									  
+		//this.title = "";									  
 		$("body").append("<p id='tooltip'>"+ this.t +"</p>");
 		$("#tooltip").css("top",(e.pageY - xOffset) + "px").css("left",(e.pageX + yOffset) + "px").fadeIn("fast");		
     },
@@ -177,7 +177,7 @@ $(document).ready(function() {
 	$(".int").numeric();
 	
 	// Site navigation dropdown menus
-	$('#nav li.cdd').hover(function(){
+	$('#nav li.cdd').click(function(){
 		$('#nav li.cdd ul.dd').slideUp(150); // hide all other dd
 		$(this).children('#nav li.cdd ul.dd').slideDown('fast');
 	}, function(){
@@ -185,7 +185,16 @@ $(document).ready(function() {
 			$(this).children('#nav li.cdd ul.dd').slideUp('fast');
 		});
 	});
+    
+    window.onclick = function(event) {
+        $(this).oneTime(250, function() {
+			$(this).children('#nav li.cdd ul.dd').slideUp('fast');
+		});
+    }
+
 	
+    
+    
 	// Clear Inpt of Text
 	$(".clr-txt").focus(function(){
 	   if (this.value == this.defaultValue){

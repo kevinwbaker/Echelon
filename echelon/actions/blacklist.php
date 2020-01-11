@@ -59,13 +59,13 @@ if($_POST['deact']) { // if this is a deactivation request
 	## Query Section ##
 	$result = $dbl->blacklist($ip, $reason, $mem->id);
 	if(!$result) // if false
-		sendBack('That IP was not added to the blacklist');
+		sendBack('That IP was not added to the blacklist.');
 	
 	// if got this far we are doing well so lets send back a good message
-	sendGood('The IP has been added to the banlist');
+	sendGood('The IP has been added to the banlist.');
 	exit; // no need to continue
 
 } else { // if this page was not posted and a user indirectly ends up on this page then sent to SA page with error
-	set_error('Please do not load that page without submitting the ban IP address form');
 	send('../sa.php');
+    set_error('Please do not load that page without submitting the ban IP address form.');
 }

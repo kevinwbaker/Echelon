@@ -38,11 +38,11 @@ if(strlen($string) > 0) {
 		
 			$stmt->bind_result($name);
 		
-			echo '<ol>';
+			echo '<ul>';
 			while ($stmt->fetch()) :
 				echo '<li onClick="fill(\''.tableClean($name).'\');">'.$name.'</li>';
 			endwhile;
-			echo '</ol>';
+			echo '</ul>';
 			
 		} else { // if nothing try even more flexible query
 		
@@ -55,15 +55,15 @@ if(strlen($string) > 0) {
 			
 				$stmt->bind_result($name);
 			
-				echo '<ol>';
+				echo '<ul>';
 				while ($result = $query_3->fetch_object()) :
 					echo '<li onClick="fill(\''.tableClean($name).'\');">'.$name.'</li>';
 				endwhile;
-				echo '</ol>';
+				echo '</ul>';
 				
 			} else { // if nothing try even more flexible query
 				
-				echo '<ol><li>There are no matches to your search</li></ol>';
+				echo '<ul><li>There are no matches to your search</li></ul>';
 			
 			} // show error if nothing gotten overal
 		
@@ -71,7 +71,6 @@ if(strlen($string) > 0) {
 	
 	} // end if query one returned nothing !
 
-	echo '<ol><li>There was nothing in the search box</li></ol>';
 }
 
 ?>

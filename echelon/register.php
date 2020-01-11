@@ -22,7 +22,7 @@ if(!isset($_REQUEST['key'])) {
 	
 	// check the new email address is a valid email address
 	if(!filter_var($email,FILTER_VALIDATE_EMAIL)) {  
-		set_error('That email is not valid 9999999');
+		set_error('That email is not valid.');
 	}
 	
 	// query db to see if key and email are valid
@@ -43,52 +43,53 @@ require 'inc/header.php';
 if($step == 1) : // if not key is sent ask for one
 ?>
 <fieldset>
-	<legend>Whats your Registration Key?</legend>
-	<p class="reg"><strong>To register you must have a registration key.</strong> Keys are sent out via email by the site admins.
-	<br />If you do not have a key please contact your Echelon site admin. Please put the email the key was sent to into the email box.</p>
-	<form action="register.php" method="post">
-		<label for="key">Registration key:</label>
-			<input type="text" id="key" size="40" name="key" />
-		<label for="email">Email Address</label>
-			<input type="text" id="email" size="40" name="email" />
-		<input type="submit" id="submit-key-reg" value="Validate Key" />
-	</form>
-</fieldset>
-<?php else : ?>
-<fieldset>
-	<legend>Setup Your Account</legend>
+	<legend>How can I get an account?</legend>
+	<p class="reg"><strong>To register you must contact the site admins.</strong> Registration links are created by the site admins. <br>If you forgot your password, you may ask the site admins to create a new account for you.</p>
 	
-	<?php errors(); ?>
-	<p class="reg">To finish your registration you need to setup your account. Please fill in all these boxes with corrent information.</p>
+</fieldset>
+
+<?php else : ?>
+<div class="container">
+  <div class="col-sm-9 col-lg-7 mx-auto">
+    <div class="card card-signin my-5">
+      <div class="card-header">
+      <h5 class="">Register</h5>
+
+	<small>To finish your registration you need to setup your account. Please fill in all these boxes with corrent information.</small>
+    </div>
+
+    <div class="card-body">
 	<form action="actions/setup-user.php" method="post" id="reg-setup">
-		<div class="form-left">
-			<label for="uname-check">Username:</label>
-				<input type="text" name="username" id="uname-check" />
-				<div class="result"></div>
-				<img class="loader" height="26px" width="26px" src="images/indicator.gif" alt="Loading..." />
-				
-			<br class="clear" />
-				
-			<label for="display">Display Name:</label>
-				<input type="text" name="display" id="display" />
-		</div>
-		
-		<div class="form-right">
-			<label for="pw1">Password:</label>
-				<input type="password" name="pw1" id="pw1" />
-				
-			<label for="pw2">Password Again:</label>
-				<input type="password" name="pw2" id="pw2" />
-		</div>
-		<br class="clear" />
+        <?php errors(); ?>
+<div class="col justify-center">        
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="uname-check" title="The name you will use to login.">Username</label>
+            <div class="col-sm-8">
+            <input type="text" name="username" id="uname-check" class="form-control" required autofocus>
+        </div></div>
+            <div class="form-group row">
+				<label class="col-sm-4 col-form-label" for="display">Display Name</label>
+					<div class="col-sm-8"><input class="form-control" type="text" name="display" id="display"/></div>
+            </div>
+            <hr>
+            <div class="form-group row">                
+                <label class="col-sm-4 col-form-label" for="pw1">Password</label>
+                <div class="col-sm-8"><input class="form-control" type="password" name="pw1" id="pw1"></div>
+            </div>
+            <div class="form-group row">
+                <label for="pw2" class="col-sm-4 col-form-label">Verify Password</label>
+                <div class="col-sm-8"><input class="form-control" type="password" name="pw2" id="pw2"></div>
+            </div>
+            <small id="passwordHelpInline" class="text-muted">Your password must be 8-20 characters long and must not contain spaces, special characters, or emoji.</small>
+</div>
 			
 		<input type="hidden" name="key" value="<?php echo $key; ?>" id="key" />
 		<input type="hidden" name="email" value="<?php echo $email; ?>" />
 			
-		<input type="submit" value="Register" name="register" />
+		<button class="btn btn-primary float-right my-2" type="submit">Register</button>
 	
 	</form>
-</fieldset>
+</div></div></div></div>
 <?php endif; ?>
 
 <?php require 'inc/footer.php'; ?>

@@ -147,10 +147,11 @@
 
 		// send email
 		if(!mail($email, $subject, $body, $headers))
-			sendback('There was a problem sending the user login information email.');
+			sendback('There was a problem sending the user login information email. This is your username: admin and your password is: '.$user_pw);
 		
 		## Done ##
 		send('index.php?t=done'); // send to a thankyou done page that explains what next
+		sendback('This is your username: admin and your password is: '.$user_pw); //jankiest way of doing it, but should work 
 	
 	endif; // end install
 ?>

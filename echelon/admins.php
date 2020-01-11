@@ -58,9 +58,11 @@ require 'inc/header.php';
 
 if(!$db->error) :
 ?>
-
-<table summary="A list of all registered admins">
-	<caption>Admin Listing<small>A list of all registered admins</small></caption>
+<div class="col-lg-11 mx-auto my-2">
+<div class="card my-2">
+<h5 class="card-header">Admin Listing</h5>
+<div class="card-body table table-hover table-sm table-responsive">
+<table width="100%">
 	<thead>
 		<tr>
 			<th>Name
@@ -126,7 +128,7 @@ EOD;
 	?>
 	</tbody>
 </table>
-
+</div></div></div>
 <?php 
 	endif; // db error
 

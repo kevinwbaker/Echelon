@@ -64,10 +64,19 @@ class xlrstats extends plugins {
 		global $mem; // use the member class instance from outside this class
 	
 		if($mem->reqLevel('edit_xlrstats'))
-			return '<li><a href="#tabs" title="Edit some XLRstats information" rel="cd-act-xlrstats" class="cd-tab">XLRstats</a></li>';
+			return '<a class="nav-link" id="setxlr-tab" rel="setxlr" data-toggle="pill" href="#setxlr" role="tab" aria-controls="setxlr" aria-selected="false"><h6 class="my-auto">XLR Options</h6></a>';
 
 	}// end returnClientFormTab
 	
+	public function returnClientNavTab() {
+		
+		global $mem; // use the member class instance from outside this class
+	
+		if($this->xlr_user)
+			return '<a class="nav-link" id="xlr-tab" href="#xlr" data-toggle="tab" role="tab" aria-controls="xlr" aria-selected="false"><h6 class="my-auto">XLRStats</h6></a>';
+
+	}// end returnClientFormTab    
+    
 	public function returnClientForm($cid) {
 	
 		if(empty($cid))
@@ -82,22 +91,30 @@ class xlrstats extends plugins {
 			if($this->xlr_hide == 1) 
 				$hide = 'checked="checked"';
 	
-			$data = '<div id="cd-act-xlrstats" class="act-slide">
+			$data = '<div class="tab-pane fade" id="setxlr" role="tabpanel" aria-labelledby="setxlr-tab">
+                <div class="col justify-center">
 				<form action="lib/plugins/'.__CLASS__.'/actions.php" method="post">
-				
-					<label for="xlr-name">Fixed Name:</label>
-						<input type="text" name="fixed-name" value="'. $this->xlr_fixed_name .'" id="xlr-name" /><br />
-					
-					<label for="xlr-hid">Hide Stats:</label>
-						<input type="checkbox" name="hidden" id="xlr-hid" '.$hide.' />
+				<div class="form-row">    
+					<label class="col-form-label col-sm-4" for="xlr-name">Fixed Name</label>
+                        <div class="col-md-4">    
+						<input class="form-control" type="text" name="fixed-name" value="'. $this->xlr_fixed_name .'" id="xlr-name" />
+					</div></div>
+                    <div class="form-row">
+					<label class="col-sm-4 my-2" for="xlr-hide">Hide Stats?</label>
+                    
+                        <div class="col-md-24 my-2">
+                        <label class="switch" name="pb" id="pb">
+                          <input type="checkbox" name="hidden" id="xlr-hid" '.$hide.'>
+                          <span class="slider round"></span>
+                        </label></div></div>                    
 						
-					<div class="xlr"></div>
 					
 					<input type="hidden" name="cid" value="'.$cid.'" />
 					<input type="hidden" name="token" value="'. $xlr_token .'" />
-					<input type="submit" name="xlrstats-sub" value="Save Changes" />
+					<button class="btn btn-primary float-right my-auto" type="submit" name="xlrstats-sub">Save Changes</button>
 				</form>
-			</div>';
+			</div>
+            </div>';
 		
 			return $data;
 			
@@ -173,7 +190,9 @@ class xlrstats extends plugins {
 			else
 				$hide = "No";
 
-			$data = '<table class="cd-table" id="xlrstats-table">
+			$data = '
+            <div class="justify-content-center table table-hover table-responsive table-sm">
+            <table width="100%" id="xlrstats-table">
 				<tbody>
 				<tr>
 					<th>Kills</th>
@@ -200,7 +219,8 @@ class xlrstats extends plugins {
 						<td>'.$hide.'</td>
 				</tr>
 				</tbody>
-			</table>';
+			</table>
+            </div>';
 			
 			return $data;
 		

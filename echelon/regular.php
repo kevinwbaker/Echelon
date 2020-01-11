@@ -70,9 +70,12 @@ require 'inc/header.php';
 
 if(!$db->error) :
 ?>
+<div class="col-lg-11 mx-auto my-2">
+<div class="card my-2">
+<h5 class="card-header">Regular Players</h5>
+<div class="card-body table table-hover table-sm table-responsive">
 
-<table summary="A list of players who are regular server go'ers o your servers.">
-	<caption>Regulars<small>A list of players who are regular server go'ers o your servers. Must have more than <strong><?php echo $connections_limit; ?></strong> connections and been seen in the last <strong><?php echo $lenght; ?></strong> days.</small></caption>
+<table width="100%">
 	<thead>
 		<tr>
 			<th>Name
@@ -81,7 +84,7 @@ if(!$db->error) :
 			<th>Connections
 				<?php linkSort('connections', 'Connections'); ?>
 			</th>
-			<th>Client-id
+			<th>Client-ID
 				<?php linkSort('id', 'Client-id'); ?>
 			</th>
 			<th>Level
@@ -138,7 +141,7 @@ EOD;
 	?>
 	</tbody>
 </table>
-
+</div></div></div>
 <?php 
 	endif; // db error
 

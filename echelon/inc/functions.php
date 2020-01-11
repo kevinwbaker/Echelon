@@ -63,6 +63,7 @@ function delUserLink($id, $token) {
 				<input type="hidden" value="'.$token.'" name="token" />
 				<input type="hidden" value="'.$id.'" name="id" />
 				<input type="hidden" value="del" name="t" />
+                <div class="row ml-auto"><!-- find better solution, like resizing table cell/column -->
 				<input class="harddel" type="image" src="images/user_del.png" alt="Delete" title="Delete this user forever" />
 			</form>';
 
@@ -78,7 +79,7 @@ function displayEchLog($array, $style = 'client') {
 
 	global $tformat; // import the time format varible for use in this function
 
-	foreach($array as $ech_log) :
+	foreach((array)$array as $ech_log) :
 	
 		## get vars
 		$id = $ech_log['id'];
@@ -157,6 +158,7 @@ function rcon($rcon_ip, $rcon_port, $rcon_pass, $command) {
 
 	if(!$fp) {
 		return "$errstr ($errno)<br>\n";
+        sendBack('Could not send RCON Command.');
 	} else {
 		$query = "\xFF\xFF\xFF\xFFrcon \"" . $rcon_pass . "\" " . $command;
 		fwrite($fp,$query);
@@ -192,7 +194,7 @@ function unbanButton($pen_id, $cid, $type, $inactive) {
 			<input type="hidden" name="cid" value="'.$cid.'" />
 			<input type="hidden" name="banid" value="'.$pen_id.'" />
 			<input type="hidden" name="type" value="'.$type.'" />
-			<input type="image" value="Unban" name="unban-sub" src="images/delete.png" title="De-Activate / Unban" />
+            <button style="padding: 0; border: none; background: none;" type="submit" value="Unban" name="unban-sub" title="De-Activate / Unban"><img src="images/delete.png"></button>
 		</form>';
 	} else {
 		return null;
@@ -335,14 +337,12 @@ function checkBL() {
  * Find how many login attempts the user has made
  */
 function trys() { //
-	echo '<em class="trys">';
+	echo '<div class="form-group row"><small class="mx-auto">';
 
 	if($_SESSION['wrong'] != 0)
-		echo 'You have used '.$_SESSION['wrong'].' of 3 attempts to login';
-	else
-		echo 'Please login to Echelon';
+		echo 'You have used '.$_SESSION['wrong'].' of 3 attempts to login.';
 		
-	echo '</em><br />';
+	echo '</small></div>';
 }
 
 /**
@@ -567,7 +567,10 @@ function echUserLink($id, $name, $name_title = NULL, $name_box = NULL) {
 
 	if(empty($name_title))
 		$name_title = $name;
-		
+	
+    if(empty($name))
+		$name = $id;
+    
 	if(empty($name_box))
 		$name_box = $name;
 
@@ -587,7 +590,7 @@ function totalPages($total_rows, $max_rows) {
 
 function recordNumber($start_row, $max_rows, $total_rows) {
 
-	echo 'Records: '.($start_row + 1).'&nbsp;to&nbsp;'.min($start_row + $max_rows, $total_rows).'&nbsp;of&nbsp;'.$total_rows;
+	echo 'Showing '.($start_row + 1).'&nbsp;to&nbsp;'.min($start_row + $max_rows, $total_rows).'&nbsp;entries out of&nbsp;'.$total_rows.'&nbsp;total entries.';
 }
 
 function queryStringPage() {
@@ -653,8 +656,7 @@ function linkSortClients($keyword, $title, $is_search, $search_type, $search_str
  * @return string - the cleaned text
  */
 function removeColorCode($text) {
-
-	$text = preg_replace('/\\^([0-9])/ie', '', $text);
+	$text = preg_replace('/\^[0-9]/', '', $text); #preg_replace('/\\^([0-9])/ie', '', $text);
 	return $text;
 }
 
@@ -896,9 +898,9 @@ function genFormToken($form) {
  * @param string $place - place this happened
  */
 function ifTokenBad($place) {
-	hack(1); // plus 1 to hack counter
+	//hack(1); // plus 1 to hack counter
 	writeLog($place.' - Bad Token'); // make note in log
-	sendBack('Hack Attempt Detected - If you continue you will be removed from this site');
+	//sendBack('Hack Attempt Detected - If you continue you will be removed from this site');
 	exit;
 }
 
@@ -908,17 +910,17 @@ function ifTokenBad($place) {
 function errors() {
     $message = '';
     if($_SESSION['good'] != '') {
-        $message .= '<div class="msg success"><strong>Success:</strong> '.$_SESSION['good'].'<a class="err-close">Dismiss</a></div>';
+        $message .= '<div class="alert alert-success alert-dismissible fade show m-2" role="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>Success!</strong>  '.$_SESSION['good'].'</div>';
         $_SESSION['good'] = '';
     }
 	
     if($_SESSION['error'] != '') {
-        $message .= '<div class="msg error"><strong>Error:</strong> '.$_SESSION['error'].'<a class="err-close">Dismiss</a></div>';
+        $message .= '<div class="alert alert-danger alert-dismissible fade show m-2" role="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>Error!</strong> '.$_SESSION['error'].'</div>';
         $_SESSION['error'] = '';
     }
 	
 	if($_SESSION['warning'] != '') {
-        $message .= '<div class="msg warning"><strong>Warning:</strong> '.$_SESSION['warning'].'<a class="err-close">Dismiss</a></div>';
+        $message .= '<div class="alert alert-warning alert-dismissible fade show m-2" role="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>Warning!</strong> '.$_SESSION['warning'].'</div>';
         $_SESSION['warning'] = '';
     }
     
@@ -1041,6 +1043,15 @@ function isCD() {
 	global $page;
 
 	if($page == 'clientdetails')
+		return true;
+	else
+		return false;
+}
+
+function isRegister() {
+	global $page;
+
+	if($page == 'register')
 		return true;
 	else
 		return false;

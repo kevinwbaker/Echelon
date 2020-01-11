@@ -59,13 +59,15 @@ require 'inc/header.php';
 
 if(!$db->error) :
 ?>
-
-<table summary="A list of <?php echo limit_rows; ?> notices made by admins in the server regarding a certain player">
-	<caption>Notices<small>There are a total of <strong><?php echo $total_rows; ?></strong> notices, made by admins in the server(s)</small></caption>
+<div class="col-lg-11 mx-auto my-2">
+<div class="card my-2">
+<h5 class="card-header">Notices</h5>
+<div class="card-body table table-hover table-sm table-responsive">
+<table width="100%">
 	<thead>
 		<tr>
 			<th>Name</th>
-			<th>Client-id</th>
+			<th>Client-ID</th>
 			<th>Time Added
 				<?php linkSort('time_add', 'time added'); ?>
 			</th>
@@ -75,7 +77,7 @@ if(!$db->error) :
 	</thead>
 	<tfoot>
 		<tr>
-			<th colspan="5">Click client name to see details</th>
+			<th colspan="5">Click client name to see details.</th>
 		</tr>
 	</tfoot>
 	<tbody>
@@ -121,7 +123,7 @@ EOD;
 	?>
 	</tbody>
 </table>
-
+</div></div></div>
 <?php 
 	endif; // db error
 

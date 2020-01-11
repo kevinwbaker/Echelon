@@ -1,4 +1,5 @@
 <?php
+
 ## Die if the user has come to this page directly ##
 if (!empty($_SERVER['SCRIPT_FILENAME']) && 'mysql-class.php' == basename($_SERVER['SCRIPT_FILENAME']))
   		die ('Please do not load this page directly. Thanks!');
@@ -95,8 +96,7 @@ class DB_B3 {
     public function __destruct() {
         if($this->mysql != NULL) // if it is set/created (defalt starts at NULL)
             @$this->mysql->close(); // close the connection
-		
-		$this->instance = NULL;
+		//$this->instance = NULL;
     }
 	
 	/**
@@ -307,6 +307,27 @@ class DB_B3 {
 		$stmt->close();
 	
 		return $pbid;
+	}
+    
+    /**
+	 * Get the guid of the client from a penalty id, similar to pbid
+	 *
+	 * @param string $pen_id - id of penalty to search with
+	 * @return string - pbid of the client
+	 */
+    function getGUIDfromPID($pen_id) {
+		$query = "SELECT c.guid FROM penalties p LEFT JOIN clients c ON p.client_id = c.id WHERE p.id = ? LIMIT 1";
+		$stmt = $this->mysql->prepare($query);
+		$stmt->bind_param('i', $pen_id);
+		$stmt->execute();
+		
+		$stmt->store_result();
+		$stmt->bind_result($guid);
+		$stmt->fetch();
+		$stmt->free_result();
+		$stmt->close();
+	
+		return $guid;
 	}
 
 #############################

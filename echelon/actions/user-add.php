@@ -1,4 +1,8 @@
 <?php
+#error_reporting(-1);
+#ini_set('display_errors', 'On');
+#set_error_handler("var_dump");
+
 $auth_name = 'add_user';
 require '../inc.php';
 
@@ -39,15 +43,23 @@ $body = preg_replace('#%ech_name%#', $config['cosmos']['name'], $body);
 // replace %name%
 $body = preg_replace('#%name%#', 'new user', $body);
 
+$headers =  'MIME-Version: 1.0' . "\r\n"; 
 $headers = "From: echelon@".$_SERVER['HTTP_HOST']."\r\n";
 $headers .= "Reply-To: ". EMAIL ."\r\n";
-$headers .= "MIME-Version: 1.0\r\n";
-$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n"; 
 $subject = "Echelon User Registration";
 
+
 // send email
-if(!mail($email, $subject, $body, $headers))
-	sendback('There was a problem sending the email.');
+#try {
+#mail($email, $subject, $body, $headers);
+#    sendGood('Mail sent.');
+#} catch (Exception $e) {
+#    sendBack('Caught exception: ',  $e->getMessage(), ".");
+#}
+
+#if(!mail($email, $subject, $body, $headers))
+#	sendback('There was a problem sending the email.');
 	
 ## run query to add key to the DB ##
 $add_user = $dbl->addEchKey($user_key, $email, $comment, $group, $mem->id);
@@ -55,4 +67,6 @@ if(!$add_user)
 	sendBack('There was a problem adding the key into the database');
 
 // all good send back good message
-sendGood('Key Setup and Email has been sent to user');
+#sendGood('Key Setup and Email has been sent to user');
+sendGood('Send this link to user:
+			"http://'.$_SERVER['SERVER_NAME'].PATH.'register.php?key='.$user_key.'&amp;email='.$email.'"');

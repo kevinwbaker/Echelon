@@ -9,7 +9,7 @@ if($_GET['t'] == 'del') :
 	if(isset($_GET['id']) || isID($_GET['id']))
 		$sid = $_GET['id'];
 	else
-		sendBack('Vital information needed to delete the server was not sent');
+		sendBack('Vital information needed to delete the server was not sent.');
 	
 	## check that the form token is corret
 	if(!verifyFormToken('del-server'.$sid, $tokens)) // verify token
@@ -17,13 +17,13 @@ if($_GET['t'] == 'del') :
 		
 	$result = $dbl->delServer($sid);
 	if(!$result)
-		sendBack('There was a problem with deleting the server');
+		sendBack('There was a problem with deleting the server.');
 	
 	$result = $dbl->delServerUpdateGames($game_id);
 	if(!$result)
-		sendBack('There was a problem with deleting the server');
+		sendBack('There was a problem with deleting the server.');
 	
-	sendGood('The server has been deleted');
+	sendGood('The server has been deleted.');
 	
 	exit; // stop - no need to load the rest of the page
 
@@ -88,11 +88,11 @@ if($change_rcon_pw == true)
 
 // check that the rcon_ip is valid
 if(!filter_var($rcon_ip, FILTER_VALIDATE_IP))
-	sendBack('That Rcon IP Address is not valid');
+	sendBack('That RCON IP Address is not valid.');
 	
 // check that the rcon_ip is valid
 if( (!filter_var($ip, FILTER_VALIDATE_IP)))
-	sendBack('That server IP Address is not valid');
+	sendBack('That server IP Address is not valid.');
 	
 // Check Port is a number between 4-5 digits
 if( (!is_numeric($rcon_port)) || (!preg_match('/^[0-9]{4,5}$/', $rcon_port)) )
@@ -100,7 +100,7 @@ if( (!is_numeric($rcon_port)) || (!preg_match('/^[0-9]{4,5}$/', $rcon_port)) )
 
 if($is_add) : // if is add server request
 	if(!is_numeric($game_id)) // game_id is a digit
-		sendBack('Invalid data sent');
+		sendBack('Invalid data sent.');
 endif;
 	
 ## Update DB ##
@@ -116,7 +116,7 @@ if(!$result)
 
 ## Return ##
 if($is_add) {
-	set_good('Server '. $name .' has been added to the database records');
+	set_good('Server '. $name .' has been added to the database records.');
 	send('../settings-server.php');
 } else
-	sendGood('Your settings have been updated');
+	sendGood('Your settings have been updated.');

@@ -30,7 +30,7 @@ if(!isID($cid))
 	sendBack('Invalid data sent, ban not added');
 
 ## LOG Query ##
-$results = $dbl->addEchLog('XLRstats', 'XLRstats information changed', $cid, $mem->id);
+$results = $dbl->addEchLog('XLRstats', 'XLRstats information changed', $cid, $mem->id, $game);
 
 ## Update XLRstats table ##
 $query = "UPDATE xlr_playerstats SET hide = ?, fixed_name = ? WHERE client_id = ? LIMIT 1";

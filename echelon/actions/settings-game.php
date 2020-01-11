@@ -81,7 +81,7 @@ endif;
 ## Check that the DB information supplied will make a connection to the B3 database.
 $db_test = @new mysqli($db_host, $db_user, $db_pw, $db_name);
 
-if($db_test->connect_error) // send back with a failed connection message
+if(($change_db_pw == true) && ($db_test->connect_error)) // send back with a failed connection message
 	sendBack('<strong>Database Connection Error</strong>
 				<p>The connection information you supplied is incorrect.<br />'.$db_test->connect_error.'</p>'); 
 

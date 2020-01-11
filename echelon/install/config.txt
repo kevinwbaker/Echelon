@@ -12,7 +12,7 @@ define("DBL_DB", "%db_name%"); // Password for that user
 #############################
 ///// IGNORE BELOW HERE /////
 ## Echelon Version ##
-define("ECH_VER", "v.2.0b");
+define("ECH_VER", "v2.3");
 
 define("SALT", '%ech_salt%'); // do not change ever, this is salt for hashes
 
@@ -27,7 +27,7 @@ $supported_games = array( // supported games
 );
 
 // URL to check for updates with
-define("VER_CHECK_URL", "http://echelon.bigbrotherbot.net/version.txt");
+define("VER_CHECK_URL", "https://raw.githubusercontent.com/miltann/Echelon-2/master/echelon/version.txt");
 
 // Do not touch this varible
 define("INSTALLED", 'yes');

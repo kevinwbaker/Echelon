@@ -1,6 +1,5 @@
 <?php
 $page = "map";
-$page_title = "Player Map";
 $auth_name = 'clients';
 $b3_conn = true; // this page needs to connect to the B3 database
 $pagination = false; // this page requires the pagination part of the footer
@@ -44,7 +43,6 @@ if(file_exists($geoip_db_file)) :
 		$country_name = geoip_country_name_by_addr($gi, $ip);
 		$count = $countries[$country_name];
 		$countries[$country_name] = $count + 1;
-
 	endforeach;
 
 	geoip_close($gi);

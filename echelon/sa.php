@@ -47,7 +47,7 @@ if($_GET['t'] == 'user') :
 		$admin_name = $result[8];
 	}
 	
-	$ech_logs = $dbl->getEchLogs($admin_id, NULL, 'admin'); // get the echelon logs created by this user
+	$ech_logs = $dbl->getEchLogs($id, NULL, 'admin'); // get the echelon logs created by this user
 	
 	$token_del = genFormToken('del'.$id);
 
@@ -123,48 +123,63 @@ require 'inc/header.php';
 
 if($is_edit_user) : 
 
-	echo echUserLink($uid, $u_display, null, '&laquo; Go Back');
+	#echo echUserLink($uid, $u_display, null, '&laquo; Go Back');
 ?>
-
-	<fieldset>
-		<legend>Edit <?php echo $u_display; ?></legend>
-		
+<div class="container my-2">
+<div class="card card-signin my-2">
+<h5 class="card-header">Edit <?php echo $u_display; ?></h5>
+<div class="card-body">
+	
 		<form action="actions/user-edit.php" method="post">
-			
-			<label for="display">Display Name:</label>
-				<input type="text"  name="display" id="display" value="<?php echo $u_display; ?>" /><br />
-			
-			<label for="username">Username:</label>
-				<input type="text" name="username" id="username" value="<?php echo $u_username; ?>" /><br />
-				
-			<label for="email">Email Address:</label>
-				<input type="text" name="email" id="email" value="<?php echo $u_email; ?>" /><br />
-				
-			<label for="group">Group</label>
-				<select name="group" id="group">
+			<div class="col justify-center">
+            <div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="display">Display Name:</label>
+				<div class="col-sm-8"><input type="text" class="form-control" name="display" id="display" value="<?php echo $u_display; ?>"></div>
+			</div>
+            <div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="username">Username:</label>
+				<div class="col-sm-8"><input class="form-control" type="text" name="username" id="username" value="<?php echo $u_username; ?>"></div>
+            </div>
+            <div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="email">Email Address:</label>
+				<div class="col-sm-8"><input class="form-control" type="text" name="email" id="email" value="<?php echo $u_email; ?>"></div>
+            </div>
+            <div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="group">Group</label>
+            <div class="col-sm-8">
+				<select class="form-control" name="group" id="group">
 					<?php foreach($ech_groups as $group) :
 						if($group['id'] == $u_group_id)
 							echo '<option value="'.$group['id'].'" selected="selected">'.$group['display'].'</option>';
 						else
 							echo '<option value="'.$group['id'].'">'.$group['display'].'</option>';
 					endforeach; ?>
-				</select><br />
-			
+				</select>
+			</div>
+            </div>
+            </div>
 			<input type="hidden" name="token" value="<?php echo $ad_edit_user_token; ?>" />
 			<input type="hidden" name="id" value="<?php echo $uid; ?>" />
 				
-			<input type="submit" name="ad-edit-user" value="Edit <?php echo $u_display; ?>" />
+			<button class="btn btn-primary float-right" type="submit" name="ad-edit-user" value="Edit <?php echo $u_display; ?>">Save Settings</button>
 			
 		</form>
-		
-	</fieldset>
+		</div>
+    </div>
+</div>
+	
 
 <?php elseif($is_view_user) : ?>
-	<a href="sa.php" title="Go back to site admin page" class="float-left">&laquo; Site Admin</a>
-	<span class="float-right"><span class="float-left"><?php echo delUserLink($id, $token_del)?></span><?php echo editUserLink($id, $name); ?></span>
 	
-	<table class="user-table">
-		<caption><img src="images/cd-page-icon.png" width="32" height="32" alt="" /><?php echo $display; ?><small>Everything Echelon knows about <?php echo $display; ?></small></caption>
+
+<div class="col-lg-11 mx-auto my-2">
+<div class="card my-2">
+<h5 class="card-header">Echelon User Details for  <?php echo $display; ?>
+<span class="float-right"><span class="float-right"><?php echo delUserLink($id, $token_del)?></span><?php echo editUserLink($id, $name); ?></span></h5>
+<div class="card-body table table-hover table-sm table-responsive">
+
+	
+	<table class="user-table" width="100%">
 		<tbody>
 			<tr>
 				<th>Name</th>
@@ -190,13 +205,15 @@ if($is_edit_user) :
 			</tr>
 		</tbody>
 	</table>
-	
+    <hr>
 
-	<table>
-		<caption>Echelon Logs<small>created by <?php echo $display; ?></caption>
+<h5 class="my-3" >Echelon Logs</h5>
+<div class="table table-hover table-sm table-responsive">
+
+	<table width="100%">
 		<thead>
 			<tr>
-				<th>id</th>
+				<th>ID</th>
 				<th>Type</th>
 				<th>Message</th>
 				<th>Time Added</th>
@@ -207,21 +224,30 @@ if($is_edit_user) :
 			<tr><th colspan="5"></th></tr>
 		</tfoot>
 		<tbody>
-			<?php displayEchLog($ech_logs, 'admin'); ?>
+			<?php 
+            displayEchLog($ech_logs, 'admin'); 
+            if ($ech_logs==0) { 
+                echo '<tr><td colspan="6">There are no echelon actions logged for this user.</td></tr></tr>'; 
+            }
+            ?>
 		</tbody>
 	</table>
 	
+</div></div></div>    
 <?php elseif($is_permissions) : ?>
 	
-	<a href="sa.php" title="Go back to site admin page" class="float-left">&laquo; Site Admin</a>
 	
-	<a href="sa.php?t=perms-add" title="Add a new Echelon group" class="float-right">Add Group &raquo;</a><br />
+<div class="col-lg-11 mx-auto my-2">
+<div class="card my-2">
+<h5 class="card-header">Echelon Groups
+<small><a href="sa.php?t=perms-add" title="Add a new Echelon group" class="my-auto float-sm-right">Add Group &raquo;</a></small>
+</h5>
+<div class="card-body table table-hover table-sm table-responsive">
 
-	<table>
-		<caption>Groups<small>A list of all the Echelon Groups</caption>
+<table width="100%">
 		<thead>
 			<tr>
-				<th>id</th>
+				<th>ID</th>
 				<th>Group Name</th>
 				<th></th>
 			</tr>
@@ -243,7 +269,7 @@ if($is_edit_user) :
 						$id = $group['id'];
 						$name = $group['display'];
 						
-						$alter = alter();
+						
 						$name_link = echGroupLink($id, $name);
 						
 						// setup heredoc (table data)			
@@ -266,17 +292,19 @@ EOD;
 			?>
 		</tbody>
 	</table>
-	
+</div></div></div>	
 <?php elseif($is_perms_group) : ?>
 
 	<a href="sa.php?t=perms" title="Go back to permissions management homepage" class="float-left">&laquo; Permissions</a><br />
+<div class="col-lg-11 mx-auto my-2">
+<div class="card my-2">
+<h5 class="card-header">Permissions for the <?php echo $group_name; ?> Group</h5>
+<div class="card-body">	
 
-	<fieldset>
-		<legend>Permissions for the <?php echo $group_name; ?> Group</legend>
 		
 		<form action="actions/perms-edit.php?gid=<?php echo $group_id; ?>" method="post">
 		
-		<table id="perms">
+		<table id="perms" width="100%">
 		<tbody>
 		<?php
 			$perms_token = genFormToken('perm-group-edit');
@@ -315,7 +343,7 @@ EOD;
 						$p_name_read = 'PBSS';
 					
 					if($p_id != "") :
-						echo '<td class="perm-td"><label for="'. $p_name .'">' . $p_name_read . '</label><input id="'.$p_name.'" type="checkbox" name="' . $p_name . '" ' . $checked . ' />'; 
+						echo '<td class="perm-td"><label class="col-sm-8 my-2" for="'. $p_name .'">' . $p_name_read . '</label><div class="col"><label class="switch" for="'. $p_name .'"><input id="'.$p_name.'" type="checkbox" name="' . $p_name . '" ' . $checked . ' /><span class="slider round"></span></label></div>'; 
 						tooltip($p_desc);
 						echo '</td>';						
 					endif;
@@ -334,36 +362,39 @@ EOD;
 		</tbody>
 		</table>
 		
-			<br />
+			
 			<input type="hidden" name="token" value="<?php echo $perms_token; ?>" />
-			<input type="submit" value="Save Changes" />
+            <button class="btn btn-primary float-right" type="submit" name="server-settings-sub">Save Changes</button>
+            <button class="harddel btn float-right disabled mx-2" type="submit" name="server-settings-sub">Delete Group (not working yet)</button>
+
 		
 		</form>
-		
-	</fieldset>	
+</div></div></div>		
 	
 <?php elseif($is_perms_group_add) : ?>
 	
-	<fieldset>
-	
-	<legend>Add Echelon Group</legend>
+<div class="col-lg-11 mx-auto my-2">
+<div class="card my-2">
+<h5 class="card-header">Add Echelon Group</h5>
+<div class="card-body">	
 	
 	<form action="actions/perms-edit.php?t=add" method="post">
-	
-		<label for="g-name">Name of Group:</label>
-			<input type="text" name="g-name" id="g-name" />
-		
+	<div class="form-group row">
+		<label class="col-sm-4 col-form-label" for="g-name">Name of Group</label>
+        <div class="col-sm-8">
+			<input class="form-control" type="text" name="g-name" id="g-name" />
+		</div></div>
 		<fieldset class="none" id="perms-fs">
 		
-		<legend>Group Premissions</legend>
+		<h6 class="my-2">Group Permissions</h6>
 		
-		<table id="perms">
+		<table id="perms" width="100%">
 		<tbody>
 		<?php
 		
 			$add_g_token = genFormToken('perm-group-add');
 		
-			$perms = $dbl->getPermissions(); // gets a comprehensive list of Echelon groups
+			$perms = $dbl->getPermissions(); // gets a comprehensive list of Echelon groups AKA PREMISSIONS
 			
 			$perms_count = count($perms);
 			$rows = ceil($perms_count/5) + 1;
@@ -386,7 +417,7 @@ EOD;
 					$p_name_read = ucwords($p_name_read);
 					
 					if($p_id != "") :
-						echo '<td class="perm-td"><label for="'. $p_name .'">' . $p_name_read . '</label><input id="'.$p_name.'" type="checkbox" name="' . $p_name . '" />'; 
+                        echo '<td class="perm-td"><label class="col-sm-8 my-2" for="'. $p_name .'">' . $p_name_read . '</label><div class="col"><label class="switch" for="'. $p_name .'"><input id="'.$p_name.'" type="checkbox" name="' . $p_name . '"/><span class="slider round"></span></label></div>'; 
 						tooltip($p_desc);
 						echo '</td>';						
 					endif;
@@ -410,39 +441,33 @@ EOD;
 		
 		<br />
 		<input type="hidden" name="token" value="<?php echo $add_g_token; ?>" />
-		<input type="submit" value="Add Group" />
+        <button class="btn btn-primary float-right" type="submit" value="Add Group">Add Group</button>
 	
 	</form>
-	
-	</fieldset>
+</div></div></div>	
 	
 <?php else : ?>
-<a href="sa.php?t=perms" title="Manage Echelon User Permissions" class="float-right">User Permissions &raquo;</a><br />
-
-<table summary="A list of people who have access to login to Echelon">
-	<caption>Echelon Users<small>A list of all people who can login to Echelon.</small></caption>
+<div class="container">
+<div class="card my-2">
+<div class="card-header">
+    <h5 class="my-auto">Echelon Users</h5></div>
+    <div class="card-body table table-hover table-sm table-responsive">
+    <table width="100%">
 	<thead>
 		<tr>
-			<?php if(GRAVATAR) echo '<th></th>'; ?>
-			<th>id</th>
+			<th>ID</th>
 			<th>Name</th>
 			<th>Group</th>
 			<th>Email</th>
 			<th>IP Address</th>
 			<th>First Seen</th>
 			<th>Last Seen</th>
-			<th></th>
+			<th>Actions</th>
+            <th></th>
 		</tr>
 	</thead>
 	<tfoot>
-		<tr>
-			<?php 
-				if(GRAVATAR)
-					echo '<th colspan="9"></th>';
-				else
-					echo '<th colspan="8"></th>';
-			?>
-		</tr>
+
 	</tfoot>
 	<tbody>
 	<?php
@@ -458,11 +483,7 @@ EOD;
 			$time_edit = date($tformat, $users['last_seen']);
 			$ip = ipLink($users['ip']);
 			$email_link = emailLink($email, $name);
-			
-			if(GRAVATAR) // if use gravatar
-				$grav = '<td>'.$mem->getGravatar($email).'</td>';
-			
-			$alter = alter();
+
 			$token_del = genFormToken('del'.$id);
 			$name_link = echUserLink($id, $name);
 			$user_img_link = echUserLink($id, '<img src="images/user_view.png" alt="view" />', $name);
@@ -471,8 +492,7 @@ EOD;
 			
 			// setup heredoc (table data)			
 			$data = <<<EOD
-			<tr class="$alter">
-				$grav
+			<tr>
 				<td>$id</td>
 				<td><strong>$name_link</strong></td>
 				<td>$group</td>
@@ -484,6 +504,7 @@ EOD;
 					$user_del_link
 					$user_edit_link
 					$user_img_link
+                    </div> <!-- First part of div in functions.php: delUserLink, used to align items-->
 				</td>
 			</tr>
 EOD;
@@ -493,38 +514,52 @@ EOD;
 	?>
 	</tbody>
 </table>
+</div>
+</div>
 <?php
 	$ech_groups = $dbl->getGroups();
 	$add_user_token = genFormToken('adduser');
 ?>
-<fieldset>
-	<legend>Add Echelon User</legend>
+<div class="card my-2">
+<div class="card-header">
+<h5 class="my-auto">Add Echelon User</h5></div>
+    <div class="card-body">    
 	<form action="actions/user-add.php" method="post" id="add-user-form">
-		<div class="left-side">
-			<label for="au-email">Email of User:</label>
-				<input type="text" name="email" id="au-email" value="" />
-			<label for="group">User Group:</label>
-				<select name="group">
+    <div class="col justify-center">
+		<div class="form-group row">
+        <label class="col-sm-4 col-form-label" for="au-email">Email of User</label>
+			<div class="col-sm-8">
+            <input class="form-control" type="text" name="email" id="au-email" value="" required>
+            </div></div>
+            
+                    <div class="form-group row">
+		<label class="col-sm-4 col-form-label" for="au-comment">Comment</label>
+        <div class="col-sm-8">
+			<input class="form-control" type="text" name="comment" id="au-comment"  placeholder="Optional">
+		</div></div>	
+                    <div class="form-group row">
+			<label class="col-sm-4 col-form-label" for="group">User Group</label>
+            <div class="col-sm-8">
+				<select class="form-control" name="group">
 					<?php foreach($ech_groups as $group) :
 						echo '<option value="'.$group['id'].'">'.$group['display'].'</option>';
 					endforeach; ?>
 				</select>
-		</div>
-		<label for="au-comment">Comment:</label><br />
-			<textarea name="comment" id="au-comment" rows="6" cols="25"></textarea>
-			
+
 		<input type="hidden" name="token" value="<?php echo $add_user_token; ?>" />
-		
-		<input id="add-user" type="submit" name="add-user" value="Add User">
+		</div></div>
+		<button name="add-user" id="add-user" class="btn btn-primary float-right my-2" value="Add User" type="submit">Add User</button>                    
+        </div>
 	</form>
-</fieldset>
+</div></div>
 
 
-<div style="height:30px;"></div>
 
-
-<table summary="A list of valid keys for Echelon registration">
-	<caption>Registration Keys<small>A list of valid keys for Echelon registrations</small></caption>
+<div class="card my-2">
+<div class="card-header">
+<h5 class="my-auto">Valid Registration Keys</h5></div>    
+<div class="card-body table table-hover table-sm table-responsive">   
+<table width="100%">
 	<thead>
 		<tr>
 			<th>Registration Key</th>
@@ -555,9 +590,7 @@ EOD;
 			$comment = cleanvar($reg_keys['comment']); // comment about key
 			$time_add = date($tformat, $reg_keys['time_add']);
 			$email = emailLink($reg_keys['email'], '');
-			$admin_link = echUserLink($reg_keys['admin_id'], $reg_keys['admin']);
-			
-			$alter = alter();
+			$admin_link = echUserLink($reg_keys['admin_id'], 0); #$reg_keys['admin_id']; #echUserLink($reg_keys['admin_id'], $reg_keys['admin']);			
 			
 			$token_keydel = genFormToken('keydel'.$reg_key);
 			
@@ -597,16 +630,17 @@ EOD;
 	?>
 	</tbody>
 </table>
+</div></div>
 
 
-<div style="height:30px;"></div>
 
-
-<table summary="A list of people banned from accessing this website">
-	<caption>Echelon Blacklist<small>A list of people banned from accessing this website.</small></caption>
+<div class="card my-2">
+<h5 class="card-header" title="A list of people banned from accessing this website.">Echelon Blacklist</h5>            
+<div class="card-body table table-hover table-sm table-responsive">
+<table width="100%">
 	<thead>
 		<tr>
-			<th>id</th>
+			<th>ID</th>
 			<th>IP Address</th>
 			<th>Active</th>
 			<th>Comment</th>
@@ -638,7 +672,7 @@ EOD;
 				$time_add = date($tformat, $time_add);
 				$ip = ipLink($ip);		
 					
-				$alter = alter();
+				
 					
 				$token = genFormToken('act'.$id);
 
@@ -647,15 +681,14 @@ EOD;
 					$actions = '<form action="actions/blacklist.php" method="post">
 						<input type="hidden" name="id" value="'.$id.'" />
 						<input type="hidden" name="token" value="'.$token.'" />
-						<input type="submit" name="deact" value="De-active" class="action del" title="De-active this ban" />
+                        <button type="submit" name="deact" value="De-active" class="btn btn-warning btn-sm">De-Activate</button>
 						</form>';
 				} else {
 					$active = 'No';
-					$alter .= " inact";
 					$actions = '<form action="actions/blacklist.php" method="post">
 						<input type="hidden" name="id" value="'.$id.'" />
 						<input type="hidden" name="token" value="'.$token.'" />
-						<input type="submit" name="react" value="Re-active" class="action plus" title="Re-active this ban" />
+                        <button type="submit" name="react" value="Re-active" class="btn btn-info btn-sm">Re-Activate</button>
 						</form>';
 				}
 				
@@ -690,25 +723,28 @@ EOD;
 	?>
 	</tbody>
 </table>
+<hr>
 
-<fieldset>
-	<legend>Add to Blacklist</legend>
 	<form action="actions/blacklist.php" method="post" id="add-bl-form">
-		<div class="left-side" style="width: auto;">
-			<label for="bl-reason">Reason:</label>
-				<textarea rows="6" cols="18" name="reason" id="bl-reason" class="clr-txt">Enter a reason for this ban...</textarea>
-		</div>
-		<div class="left-side">
-			<label for="bl-ip" class="ip-label">IP Address:</label>
-				<input type="text" name="ip" id="bl-ip" /><br />
-				
-			<?php $bl_token = genFormToken('addbl'); ?>
+    <h5 class="my-4">Add IP to Blacklist</h5>
+    <div class="col justify-center">
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label" for="bl-ip">IP Address</label>
+            <div class="col-sm-8"><input class="form-control" type="text" name="ip" id="bl-ip"></div>
+            <?php $bl_token = genFormToken('addbl'); ?>
 			<input type="hidden" name="token" value="<?php echo $bl_token; ?>" />
-				
-			<input id="add-user-step-2" type="submit" value="Ban IP Address" />
+    </div>
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="bl-reason">Reason</label>
+                <div class="col-sm-8"><input class="form-control" name="reason" id="bl-reason"></div>
+        </div>
+
 		</div>
+        <button id="add-user-step-2" class="btn btn-primary float-right mx-3" value="Ban IP Address" type="submit">Ban IP-Address</button>
 	</form>
-</fieldset>
+
+</div></div>
+</div>
 
 <?php
 	endif; // end if on what kind of page this is

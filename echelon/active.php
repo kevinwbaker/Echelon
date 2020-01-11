@@ -50,7 +50,7 @@ $start_row = $page_no * $limit_rows;
 $query = sprintf("SELECT c.id, c.name, c.connections, c.time_edit, g.name as level
 	FROM clients c LEFT JOIN groups g ON c.group_bits = g.id
 	WHERE c.group_bits >= 8
-	AND  c.group_bits <=64 AND(%d - c.time_edit > %d*60*60*24 )", $time, $length);
+	AND(%d - c.time_edit > %d*60*60*24 )", $time, $length);
 
 $query .= sprintf("ORDER BY %s ", $orderby);
 
@@ -68,10 +68,15 @@ require 'inc/header.php';
 if(!$db->error) :
 ?>
 
-<table summary="A list of <?php echo limit_rows; ?> admins who could be deemed as inactive">
-	<caption>Inactive Admins<small>There are <strong><?php echo $total_rows; ?></strong> admins who have not been seen by B3 for</small>
+<div class="col-lg-11 mx-auto my-2">
+<div class="card my-2">
+<h5 class="card-header">Inactive Admins</h5>
+<div class="card-body table table-hover table-sm table-responsive">
+<table width="100%">
 		<form action="active.php" method="get" class="sm-f-select">
-			<select name="d" onchange="this.form.submit()">
+        <div class="row my-1">
+        <small class="my-auto mx-3">There are <strong><?php echo $total_rows; ?></strong> admins who have not been seen by B3 for</small>
+			<select class="form-control col-md-2" name="d" onchange="this.form.submit()">
 				<option value="1"<?php if($length == '1') echo ' selected="selected"'; ?>>1 Day</option>
 				<option value="3"<?php if($length == '3') echo ' selected="selected"'; ?>>3 Days</option>
 				<option value="7"<?php if($length == '7') echo ' selected="selected"'; ?>>1 Week</option>
@@ -82,6 +87,7 @@ if(!$db->error) :
 				<option value="182"<?php if($length == '182') echo ' selected="selected"'; ?>>6 Months</option>
 				<option value="365"<?php if($length == '365') echo ' selected="selected"'; ?>>1 Year</option>
 			</select>
+            </div>
 		</form>
 	</caption>
 	<thead>
@@ -89,7 +95,7 @@ if(!$db->error) :
 			<th>Name
 				<?php linkSort('name', 'Name'); ?>
 			</th>
-			<th>Client-id
+			<th>Client-ID
 				<?php linkSort('id', 'Client-id'); ?>
 			</th>
 			<th>Level
@@ -108,7 +114,7 @@ if(!$db->error) :
 	</thead>
 	<tfoot>
 		<tr>
-			<th colspan="6">Click client name to see details</th>
+			<th colspan="6">Click client name to see details.</th>
 		</tr>
 	</tfoot>
 	<tbody>
@@ -152,7 +158,7 @@ EOD;
 	?>
 	</tbody>
 </table>
-
+</div></div></div>
 <?php 
 	endif; // db error
 

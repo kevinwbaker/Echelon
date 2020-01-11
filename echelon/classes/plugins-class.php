@@ -58,8 +58,11 @@ class plugins {
 	function displayCDBio() {
 		foreach(self::$plugins_class  as $plugin) :
 			if(method_exists($plugin, 'returnClientBio')) {
-				$content = $plugin->returnClientBio();
-				echo $content;
+                $content = $plugin->returnClientBio();
+                if (!(empty($content)))
+                    echo $content;
+                else
+                    return NULL;
 			}
 		endforeach;
 	}
@@ -72,8 +75,31 @@ class plugins {
 	function displayCDFormTab() {
 		foreach(self::$plugins_class as $plugin) :
 			if(method_exists($plugin, 'returnClientFormTab')) {
-				$content = $plugin->returnClientFormTab();
-				echo $content;
+				$content = '<li class="nav-item">' .$plugin->returnClientFormTab(). '</li>';
+                if (!(empty($plugin->returnClientBio())))
+                    echo $content;
+			}
+		endforeach;
+	}
+
+    # For plugins like xlrstats
+	function displayCDFormNavTab() {
+		foreach(self::$plugins_class as $plugin) :
+			if(method_exists($plugin, 'returnClientNavTab')) {
+				$content = $plugin->returnClientNavTab();
+                if (!(empty($plugin->returnClientBio())))
+                    echo '<li class="nav-item">'.$content.'</li>';
+			}
+		endforeach;
+	}
+    
+	# For logging plugins like chatlogger
+	function displayCDFormNavTabLog($cid = 0) {
+		foreach(self::$plugins_class as $plugin) :
+			if(method_exists($plugin, 'returnClientNavTabLog')) {
+				$content = $plugin->returnClientNavTabLog();
+                #if ($plugin->returnClientLogs($cid))
+                    echo '<li class="nav-item">'.$content.'</li>';
 			}
 		endforeach;
 	}
@@ -104,13 +130,21 @@ class plugins {
 		endforeach;
 	}
 	
+    function NavExists() {
+        foreach(self::$plugins_class as $plugin) :
+			if(method_exists($plugin, 'returnNav')) {
+				return True;
+			}
+		endforeach;
+    }
+    
 	/**
 	 * For each plugin check if they want to append something to the end of the CD page
 	 */
 	function displayCDlogs($cid) {
 		foreach(self::$plugins_class as $plugin) :
 			if(method_exists($plugin, 'returnClientLogs')) {
-				$content = $plugin->returnClientlogs($cid);
+				$content = $plugin->returnClientLogs($cid);
 				echo $content;
 			}
 		endforeach;

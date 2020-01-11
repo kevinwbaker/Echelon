@@ -120,12 +120,13 @@ if($mem->loggedIn()) { ## if logged in users may skip this page
 	$_SESSION['name'] = $results[3]; // get the users display name
 	$_SESSION['email'] = $results[4]; // users email address
 	$_SESSION['group'] = $results[5]; // what ecg-group is the user in
+    $_SESSION['timezone'] = $results[7]; // what timezone the user has set
 	
 	$_SESSION['auth'] = true; // authorise user to access logged in areas
 	$_SESSION['wrong'] = 0; // reset wrong counter
 	$_SESSION['hack'] = 0; // reset hack atempt count
 	
-	setcookie("game", $game_input, time()*60*60*24*31, $path); // set the game cookie equal to the game choosen in the login form
+	setcookie("game", $game_input, strtotime( '+30 days' ), $path); // set the game cookie equal to the game choosen in the login form
 
 	$_SESSION['finger'] = $ses->getFinger(); // find the hash of user agent plus salt
 
@@ -323,23 +324,11 @@ if($mem->loggedIn()) { ## if logged in users may skip this page
 <fieldset id="lostpw-field">
 	<legend>Lost Password</legend>
 
-	<form id="lostpw-form" action="login.php" method="post">
+	<p>To reset your password please contact your site admin. A new account will be created for you.</p>
 
-		<p>To reset your password please input your username and your email address. An email will be sent to telling you how to finish the steps.</p>
 
-		<label for="name">Username:</label>
-			<input type="text" name="name" id="name" tabindex="1" />
-		
-		<label for="email">Email:</label>
-			<input type="text" name="email" id="email" tabindex="2" />
-
-		<input type="hidden" name="token" value="<?php echo $token_pw; ?>" />
-
-		<input type="submit" name="lostpw" value="Recover Password" />
-	</form>
 
 </fieldset>
-
 <?php
 	require 'inc/footer.php';
 	exit; // no need to continue with this page
@@ -349,26 +338,34 @@ if($mem->loggedIn()) { ## if logged in users may skip this page
 	$page_title = "Login";
 	require 'inc/header.php';
 ?>
-<fieldset id="login-field">
-	<legend>Login</legend>
 
-	<form id="login-form" action="login.php" method="post">
+
+<div class="container">
+  <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+    <div class="card card-signin my-5">
+      <div class="card-body">
+      <h5 class="card-title text-center">Sign In</h5>
+
+	
+    <form id="login-form" action="login.php" method="post" class="form-signin">
 
 		<?php
 			trys();
 			$token = genFormToken('login');
 		?>
 
-		 <label for="f-name">Username:</label>
-			<input type="text" name="f-name" id="f-name" tabindex="1" /><br />
+        <div class="form-group row">
+            <input type="text" name="f-name" class="form-control mx-sm-3 m-0" placeholder="Username" required autofocus>
+        </div>
 
-		 <label for="f-pw">Password:</label>
-			<input type="password" name="f-pw" id="f-pw" tabindex="2" />
-		
-		<?php if($num_games != 0) : ?>
-		
-		<label for="f-game">Game:</label>
-			<select name="f-game" id="f-game" tabindex="3">
+        <div class="form-group row">
+            <input type="password" name="f-pw" class="form-control mx-sm-3 m-0" placeholder="Password" required>
+        </div>
+        
+		<?php if($num_games != 0) : # games dropdown meu?> 
+            <div class="form-group row">
+            <select name="f-game" id="f-game" class="form-control mx-sm-3">
+            
 				<?php
 					$games_list = $dbl->getGamesList();
 					$i = 0;
@@ -381,22 +378,27 @@ if($mem->loggedIn()) { ## if logged in users may skip this page
 						$i++;
 					endwhile;
 				?>	
+                
 			</select>
-			
+			</div>
 		<?php endif; ?>
 
 		<input type="hidden" name="token" value="<?php echo $token; ?>" />	
 
-		<div class="lower">
-			<span class="links-lower"><a href="?t=lost">Lost your password?</a><span class="sep">|</span><a href="register.php" title="register">Register</a></span>
-
-			<input type="submit" value="Login" />
+        <button class="btn btn-lg btn-primary btn-block text-uppercase" value="Login" type="submit">Sign in</button>
+        
+        </form>
+        <hr class="my-4">
+        <span class="links-lower"><a href="?t=lost">Lost your password?</a><span class="sep">|</span><a href="register.php" title="register">Register</a></span>
+            
 		</div>
-	</form>
+       </div>
+      </div>
+    </div>
 
-	<br class="clear" />
+  
 
-</fieldset>
+
 <?php
 	require 'inc/footer.php';
 } // end if/else of what kind of page this is.

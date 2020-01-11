@@ -6,7 +6,7 @@ require_once 'config.php'; // if config is not loaded load it in
 
 $this_page = cleanvar($_SERVER["PHP_SELF"]);
 
-$cookie_time = time()*60*60*24*31; // 31 days from now
+$cookie_time = strtotime( '+30 days' ); // 31 days from now
 ## setup the game var ##
 if($_GET['game']) {
 	$game = $_GET['game'];

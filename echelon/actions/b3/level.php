@@ -29,9 +29,10 @@ $old_level = cleanvar($_POST['old-level']);
 $password = cleanvar($_POST['password']);
 
 ## Check Empties ##
-emptyInput($level, 'data not sent');
-emptyInput($client_id, 'data not sent');
-emptyInput($old_level, 'data not sent');
+emptyInput($level, 'data not sent /level');
+emptyInput($client_id, 'data not sent /client-id');
+if ($old_level == "") # b3 set level names for regular players, will return "empty field" exception otherwise
+    $old_level == "Un-Registered";
 if(!$is_mask) // only the client level needs a password
 	emptyInput($password, 'current password');
 
@@ -62,13 +63,16 @@ endif;
 ## Add Echelon Log ##
 $level_name = $b3_groups_name[$level];
 $old_level_name = $b3_groups_name[$old_level];
-
+if($old_level_name == "")
+    $old_level_name == 'Un-Registered';
+ 
 if(!$is_mask)
 	$comment = 'User level changed from '. $old_level_name .' to '. $level_name;
 else
 	$comment = 'Mask level changed from '. $old_level_name .' to '. $level_name;
 
-$dbl->addEchLog('Level Change', $comment, $client_id, $mem->id);
+
+$dbl->addEchLog('Level Change', $comment, $client_id, $mem->id, $game);
 
 ## Query Section ##
 if(!$is_mask)

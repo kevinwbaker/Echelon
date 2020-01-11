@@ -15,6 +15,7 @@ if(verifyFormToken('comment', $tokens) == false) // verify token
 // Gets vars from form
 $cid = cleanvar($_POST['cid']);
 $comment = cleanvar($_POST['comment']);
+$adminname = 'added by ' .$mem->name;
 
 // Check for empties
 emptyInput($comment, 'comment');
@@ -24,9 +25,13 @@ emptyInput($cid, 'client id not sent');
 if(!isID($cid))
 	sendBack('Invalid data sent, ban not added');
 
+
+
 ## Query ##
 $result = $dbl->addEchLog('Comment', $comment, $cid, $mem->id, $game);
-if($result)
-	sendGood('Comment added');
+
+$query = $db->penClient('Notice', $cid, '0', $comment, $adminname, '-1');
+if($query)
+	sendGood('Comment added.');
 else
-	sendBack('There is a problem, your comment was not added to the database');
+	sendBack('There is a problem, your comment was not added to the database.');

@@ -25,7 +25,7 @@ require 'inc.php';
 
 ## Default Vars ##
 $orderby = "time_add";
-$order = "ASC";
+$order = "DESC";
 
 ## Sorts requests vars ##
 if($_GET['ob'])
@@ -67,16 +67,20 @@ $query_limit = sprintf("%s LIMIT %s, %s", $query, $start_row, $limit_rows); // a
 ## Require Header ##	
 require 'inc/header.php';
 
+?>
+<div class="col-lg-11 mx-auto my-2">
+<div class="card my-2">
+<?php
 if(!$db->error) :
 
 if($type_admin) :
-	echo '<table summary="A list of '.$limit_rows.' active tempbans/bans made by admins in a servers">';
-		echo '<caption>Admin Bans<small>There are <strong>'. $total_rows .'</strong> active bans/tempbans that have been added by admins</caption>';
-else :
-	echo '<table summary="A list of '.$limit_rows.' active tempbans/bans made by B3 in a servers">';
-		echo '<caption>B3 Bans<small>There are <strong>'. $total_rows .'</strong> active bans/tempbans that have been added by the B3 bot</caption>';
+    echo '<h5 class="card-header">Admin Bans</h5>';
+else:
+    echo '<h5 class="card-header">B3 Bans & Kicks</h5>';
 endif;
 ?>
+<div class="card-body table table-hover table-sm table-responsive">
+<table width="100%" >
 
 	<thead>
 		<tr>
@@ -134,7 +138,14 @@ endif;
 			else
 				$duration_read = '';
 
-			$time_expire_read = timeExpirePen($time_expire);
+			if($type == 'Kick')
+				$time_expire_read = '(Kick Only)'; 
+            elseif ($type == 'Notice')
+                $time_expire_read = ''; 
+			else
+				$time_expire_read = timeExpirePen($time_expire);
+            
+			
 			$time_add_read = date($tformat, $time_add);
 			$reason_read = removeColorCode($reason);
 			
@@ -177,7 +188,7 @@ EOD;
 	?>
 	</tbody>
 </table>
-
+</div></div></div>
 <?php 
 	endif; // db error
 

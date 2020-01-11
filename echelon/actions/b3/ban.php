@@ -4,8 +4,8 @@ $b3_conn = true; // this page needs to connect to the B3 database
 require '../../inc.php';
 
 if(!$_POST['ban-sub']) { // if the form not is submitted
-	set_error('Please do not call that page directly, thank you.');
-	send('../../index.php');
+    send('../../index.php');
+	set_error('Please do not call that ban page directly, thank you.');
 }
 
 ## check that the sent form token is corret
@@ -49,7 +49,9 @@ if($is_pb_ban) { // if the ban is perma ban
 	$duration = penDuration($time, $duration_form);
 	
 	$duration_secs = $duration*60; // find the duration in seconds
-	
+    if (!$mem->reqLevel('permban') AND $duration_secs > 86400)
+        sendBack('You can not chose a duration bigger than 1 day.');
+    
 	$time_expire = time() + $duration_secs; // time_expire is current time plus the duration in seconds
 
 } // end if pb/tempban var setup
@@ -73,7 +75,7 @@ if($is_pb_ban == true) :
 		
 			// PB_SV_BanGuid [guid] [player_name] [IP_Address] [reason]
 			$command = "pb_sv_banguid " . $pbid . " " . $c_name . " " . $c_ip . " " . $reason;
-			rcon($rcon_ip, $rcon_port, $rcon_pass, $command); // send the ban command
+            rcon($rcon_ip, $rcon_port, $rcon_pass, $command); // send the ban command
 			sleep(1); // sleep for 1 sec in ordere to the give server some time
 			$command_upd = "pb_sv_updbanfile"; // we need to update the ban files
 			rcon($rcon_ip, $rcon_port, $rcon_pass, $command_upd); // send the ban file update command
@@ -81,10 +83,32 @@ if($is_pb_ban == true) :
 
 		$i++;
 	endwhile;
-endif; // end if a $is_pb_ban == true
+endif;
+
+try {
+    $i = 1;
+    while($i <= $game_num_srvs) :
+        // not bulletproof, get client-id from "status" and kick using that instead of name. 
+        // thanks androiderpwnz ;)
+        $rcon_pass = $config['game']['servers'][$i]['rcon_pass'];
+        $rcon_ip = $config['game']['servers'][$i]['rcon_ip'];
+        $rcon_port = $config['game']['servers'][$i]['rcon_port'];
+        
+        $command = "drop " . $c_name. " ".$reason;
+        rcon($rcon_ip, $rcon_port, $rcon_pass, $command); // send the ban command
+
+        $i++;
+    endwhile;
+}
+
+//catch exception
+catch(Exception $e) {
+  sendBack($e);
+}
+
 
 if($result)
-	sendGood('Ban added to banlist and to the DB');
+	sendGood('Ban has been added to the database.');
 else
 	sendBack('Something went wrong the ban was not added');
 

@@ -90,7 +90,15 @@ class chatlogs extends plugins {
 	protected function getName() {
 		return parent::getName();
 	}
+
+	public function returnClientNavTabLog() {
+		
+		global $mem; // use the member class instance from outside this class
 	
+		if($mem->reqLevel(__CLASS__))
+			return '<a class="nav-link" id="chatlog-tab" href="#chatlog" data-toggle="tab" role="tab" aria-controls="chatlog" aria-selected="false"><h6 class="my-auto">Chatlog</h6></a>';
+
+	}   	
 	
 	/**
 	 * Returns a list of chatlogs of the client
@@ -98,12 +106,11 @@ class chatlogs extends plugins {
 	 * @param int $cid - the client id of the user that we need the logs for
 	 */
 	public function returnClientLogs($cid) {
-	
 		$tables_info = $this->getTables(); // get the table information for the chatlogs queries
 		$tables_names = $this->getTablesNames();
 		
 		global $tformat; // get the time format for use in the logs
-	
+    
 		include 'chatlogs-cd.php'; // include the file
 	}
 	
@@ -117,13 +124,8 @@ class chatlogs extends plugins {
 		if($mem->reqLevel(__CLASS__)) :
 		
 			global $page; // bring in the current page var from main Echelon
-			
-			if($page == __CLASS__)
-				$data = '<li class="n-chat selected">';
-			else
-				$data = '<li class="n-chat">';
-			
-			$data .= '<a href="'. PATH .'plugin.php?pl='.__CLASS__.'" title="Chatlogs from the server(s)">Chat Logs</a></li>';
+					
+			$data = '<a class="dropdown-item" href="'. PATH .'plugin.php?pl='.__CLASS__.'" title="Chatlogs from the server(s)">Chat Logs</a></li>';
 		
 			return $data;
 		
@@ -186,12 +188,20 @@ class chatlogs extends plugins {
 		## matching up tables
 		$tables_names = $this->getTablesNames();
 		$num_tables = count($tables_names);
-		
+        
 		$content = '
-		<fieldset class="search" id="chats-header" style="position: relative;">
-			<form action="plugin.php" method="get">
-				<label class="chat-fh">Select a Table:</label>
-				<select name="v">';
+        <div class="col-lg-11 mx-auto my-2">
+        <div class="card my-2">
+        <h5 class="card-header" title="Change chatlogger settings and check recent chats">Chatlogger</h5>            
+        <div class="card-body table table-hover table-sm table-responsive">
+        
+			<form action="plugin.php" method="get" id="chats-header">
+            <h5 class="my-2">Select Chatlog</h5>
+            <div class="col justify-center">
+            <div class="form-group row">
+				<label class="col-sm-4 col-form-label" for="v">Select a Table:</label>
+                <div class="col">
+                <select class="form-control" name="v">';
 		
 				## select table
 				$i = 0;
@@ -209,15 +219,50 @@ class chatlogs extends plugins {
 				
 		$content .= '</select>
 				<input type="hidden" name="pl" value="'.__CLASS__.'" />
-				<input type="submit" value="Select" />
+            </div>
+            <button class="btn btn-primary" value="Select" type="submit">Select</button>
+			</div>
+            </div>
+            </form>';
 		
+		
+		if($mem->reqLevel('chats_edit_tables')) :
+			
+			$content .= '
+			<form class="my-5" action="'.PATH.'lib/plugins/'.__CLASS__.'/actions.php" method="post" id="c-settings">
+            <h5 class="my-2 chat-fh">Table Settings</h5>
+            <div class="col justify-center">
+            <div class="form-group col">
+
+            <div class="form-group row">
+				<label class="col-sm-4 col-form-label" id="tables">MySQL Table Names</label>
+                <div class="col-sm-8">
+					<input type="text" name="tables" id="tables" class="form-control" value="'. implode(',', $this->getTables()) .'" />
+                </div>
+            </div>
+                    
+            <div class="form-group row">
+				<label class="col-sm-4 col-form-label" id="table-names">Name</label>
+                <div class="col-sm-8">
+					<input type="text" name="table-names" id="table-names" class="form-control" value="'. implode(',', $this->getTablesNames()) .'" />
+                </div>
+            </div>
+            <small>Please specify each table seperate by a comma (eg. chatlog,chatlog2), and the same with the names (eg. MW2 Chat, MW3 Chat). Put the corresponding names and tables in the same order.</small>
+            <button class="btn btn-primary float-right my-2" value="Edit Settings" type="submit">Edit Settings</button>
+            </div>            
+            </div>
 			</form>';
-		
-		if($mem->reqLevel('chats_talk_back')) :	
-			$content .= '<form action="'.PATH.'lib/plugins/'.__CLASS__.'/actions.php" method="post" id="tb-form">
-				<label class="chat-fh">Talk Back to the server:</label>
-				<input type="text" name="talkback" id="talkback" />
-				<select name="srv" id="tb-srv">';
+			
+		endif;
+        
+        if($mem->reqLevel('chats_talk_back')) :	
+			$content .= '<hr/><form action="'.PATH.'lib/plugins/'.__CLASS__.'/actions.php" method="post" id="tb-form">
+                
+                <div class="form-group row">
+                <label class="col-sm-4 col-form-label chat-fh">Talk Back to the server:</label>
+                <div class="input-group col">
+                <input class="form-control" type="text" name="talkback" id="talkback" required>
+				<select class="form-control" name="srv" id="tb-srv">';
 				
 				$i = 1;
 				
@@ -229,30 +274,13 @@ class chatlogs extends plugins {
 				
 				endforeach;
 			
-			$content .=	'</select>
-				<input type="submit" id="tb-sub" value="Talk Back" />
-			</form>';
+			$content .=	'</select></div>
+                <button id="tb-sub" class="btn btn-primary" value="Talk Back" type="submit">Talk Back</button>
+                </div>
+            </form>';
 		endif;
 		
-		if($mem->reqLevel('chats_edit_tables')) :
-			
-			$content .= '
-			<label class="chat-fh">Table Settings</label>
-			<form action="'.PATH.'lib/plugins/'.__CLASS__.'/actions.php" method="post" id="c-settings">
-			<small>Please specify each table seperate by a comma (eg. chatlog,chatlog2), and the same with the names. Put the corresponding names and tables in the same order.</small><br />
-			
-				<label id="tables">MySQL Table Names</label>
-					<input type="text" name="tables" id="tables" class="longer" value="'. implode(',', $this->getTables()) .'" />
-					
-				<label id="table-names">Name</label>
-					<input type="text" name="table-names" id="table-names" class="longer" value="'. implode(',', $this->getTablesNames()) .'" />
-			
-				<br /><input type="submit" value="Edit Settings" />
-			</form>';
-			
-		endif;
-		
-		$content .= '<span id="refreshcommand"></span></fieldset>';
+		$content .= '<span id="refreshcommand"></span>';
 		
 		if($logic['num_rows'] > 0) :
 		
@@ -260,11 +288,10 @@ class chatlogs extends plugins {
 				$table_num = 0;
 		
 			$content .= '	
-			<table id="chat" rel="'. $table_num .'">
-				<caption>Chatlogger<small>A list of everything ever said in the servers</small></caption>
+			<table width="100%" id="chat" rel="'. $table_num .'">
 				<thead>
 					<tr>
-						<th>id</th>
+						<th>ID</th>
 						<th>Name</th>
 						<th>Type</th>
 						<th>Message</th>
@@ -280,7 +307,7 @@ class chatlogs extends plugins {
 		
 		$content .= $this->buildLines($logic['data']);
 			
-		$content .= '</tbody></table>';
+		$content .= '</tbody></table></div></div>';
 			
 		else:
 			$content .= 'There are no chatlog records in the selected table.';
@@ -395,7 +422,7 @@ EOD;
 				$rcon_ip = $config['game']['servers'][$srv_id]['rcon_ip'];
 				$rcon_port = $config['game']['servers'][$srv_id]['rcon_port'];
 			
-				$command = "say ^7(^3". $mem->name ."^7): ^2" . $talkback;
+				$command = "say ^7[^3". $mem->name ."^7]: " . $talkback;
 				$return = rcon($rcon_ip, $rcon_port, $rcon_pass, $command);
 			} else
 				sendBack('You left the message box empty, please fill in the box to send a message to the server');
@@ -443,18 +470,22 @@ EOD;
 			$query = "SELECT id FROM $table LIMIT 1";
 			
 			if(!$stmt = $db->mysql->prepare($query)) // if table does not exist then prepare will fail
-				return false; // if not return false
+                return false; // if not return false
 		endforeach;
 		
-		// Update the tables row
+		// Update the tables row If no entry to update, a new one is added
 		$result = $dbl->setSettings($tables, 'chats_table_'.$game, 's');
 		if(!$result)
-			return false;
+            $result = $dbl->addSettings($tables, 'chats_table_'.$game, 's');
+            if(!$result)
+                return false; 
 		
-		// update the names row
+		// Update the names row. If no entry to update, a new one is added
 		$result_n = $dbl->setSettings($names, 'chats_names_'.$game, 's');
 		if(!$result_n)
-			return false;
+            $result_n = $dbl->addSettings($names, 'chats_names_'.$game, 's');
+            if(!$result_n)
+                return false;
 			
 		return true;
 	}

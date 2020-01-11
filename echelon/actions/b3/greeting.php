@@ -4,7 +4,6 @@ $b3_conn = true; // this page needs to connect to the B3 database
 require '../../inc.php';
 
 if($_POST['greeting-sub']) : // if the form is submitted
-
 	## check that the sent form token is corret
 	if(verifyFormToken('greeting', $tokens) == false) // verify token
 		ifTokenBad('Add comment');
@@ -20,17 +19,17 @@ if($_POST['greeting-sub']) : // if the form is submitted
 	
 	## Add Log Message ##
 	$comment = 'Greeting message changed';
-	$dbl->addEchLog('Greeting', $comment, $client_id, $mem->id);	
+	$dbl->addEchLog('Greeting', $comment, $client_id, $mem->id, $game);	
 		
 	## Query ##
 	$query = "UPDATE clients SET greeting = ? WHERE id = ? LIMIT 1";
-	$stmt = $db->mysql->prepare($query) or sendBack('Database Error');
+	$stmt = $db->mysql->prepare($query) or sendBack('Database Error.');
 	$stmt->bind_param('si', $greeting, $client_id);
 	$stmt->execute();
 	if($stmt->affected_rows)
-		sendGood('Greeting has been updated');
+		sendGood('Greeting has been updated.');
 	else
-		sendBack('Greeting was not updated');
+		sendBack('Greeting was not updated.');
 	
 	$stmt->close(); // close connection
 

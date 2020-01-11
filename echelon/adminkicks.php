@@ -55,8 +55,12 @@ require 'inc/header.php';
 
 if(!$db->error) :
 ?>
-<table summary="A list of <?php echo limit_rows; ?> kicks made by admins in a servers">
-	<caption>Admin Kicks<small>There are <strong><?php echo $total_rows; ?></strong> kicks that have been added by admins</caption>
+<div class="col-lg-11 mx-auto my-2">
+<div class="card my-2">
+<div class="card-header">
+    <h5 class="my-auto">Admin Kicks</h5></div>
+    <div class="card-body table table-hover table-sm table-responsive">
+    <table width="100%">
 	<thead>
 		<tr>
 			<th>Client
@@ -122,7 +126,7 @@ EOD;
 	?>
 	</tbody>
 </table>
-
+</div></div></div>
 <?php 
 endif;
 

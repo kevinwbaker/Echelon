@@ -60,31 +60,8 @@ endwhile; // end while looping thro all tables to find any records
 ## Spit out content if there is any ##
 if($total_overall_rows > 0) :  // if total recordset not empty
 
-echo '<div id="chatlog">
-	<h3 class="cd-h cd-slide" id="cd-chat">Chat Logs <img class="cd-open" src="images/add.png" alt="Open" /></h3>
-	<div id="cd-chat-table" class="slide-panel">';
-	## setup tabs
-	echo '<ul class="cd-tabs">';
-		
-		$i = 0; // set counter for server array id
-		
-		while($i < $num_tables) :
-			
-			if($i == 0)
-				echo '<li class="chat-active">';
-			else
-				echo '<li>';
-			
-			$server_name = $tables_names[$i];
-			
-			echo '<a rel="chat-tab-'. $i .'"  title="View the chat logs from '. $server_name .'" class="chat-tab">'. $server_name .'</a></li>';
-			
-			$i++; // increment counter
-							
-		endwhile;
-		
-	echo '</ul>'; // close out tabs
-	
+echo '<div class="tab-content" id="chatlog">
+	<div id="cd-chat-table" class="tab-pane fade table table-hover table-responsive table-sm active show"  role="tabpanel" aria-labelledby="-tab">';
 	## RECORDS
 	
 	echo '<div id="chats-box">';
@@ -95,18 +72,18 @@ echo '<div id="chatlog">
 	
 		<div id="chat-tab-<?php echo $i; ?>" class="chat-content">
 			<?php if($num_rows_{$i} == 0) { ?>
-				<p><strong>This user has no recorded chat logs for this server.</strong></p>
 					<table style="display: none;">
 			<?php } else { ?>
-					<table>
+					<table width="100%">
 			<?php } ?>
 			
 			<thead>
 				<tr>
-					<th></th>
+					<th>ID</th>
 					<th>Scope</th>
 					<th>Message</th>
 					<th>Time</th>
+                    <th>Server</th>
 				</tr>
 			</thead>
 			<tfoot>
@@ -123,6 +100,7 @@ echo '<div id="chatlog">
 					$time = date($tformat, $record['msg_time']);
 					$type = tableClean($record['msg_type']);
 					$msg = tableClean($record['msg']);
+                    $server = $tables_names[$i];
 					
 					## Highlight Commands ##
 					if (substr($msg, 0,1) == '!' or substr($msg, 0,1) == '@')
@@ -138,6 +116,7 @@ echo '<div id="chatlog">
 						<td>$type</td>
 						<td>$msg</td>
 						<td><em>$time</em></td>
+                        <td>$server</td>
 					</tr>
 EOD;
 					

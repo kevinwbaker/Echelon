@@ -12,77 +12,117 @@ $token_settings = genFormToken('settings');
 
 require 'inc/header.php';
 ?>
-
-<fieldset>
-	<legend>Echelon Settings</legend>
-	
+<div class="container">
+<div class="card card-signin my-2">
+<h5 class="card-header">Echelon Settings</h5>
+    <div class="card-body">
 	<form action="actions/settings.php" method="post" id="settings-f">
-	
-		<fieldset class="none">
-			<legend>General Echelon Settings</legend>
-			
-			<label for="name">Site Name:</label><?php tooltip('The name of your site (eg your clanname)'); ?>
-				<input type="text" name="name" value="<?php echo $settings['name']; ?>">
 
-			<label for="email">Echelon Admin Email:</label><?php tooltip('Email for the admin of this site'); ?>
-				<input type="text" name="email" value="<?php echo $settings['email']; ?>">
-				
-			<label for="admin_name">Name of Site Admin:</label><?php tooltip('Name of the admin for this site'); ?>
-				<input type="text" name="admin_name" value="<?php echo $settings['admin_name']; ?>">
+        <h6>General</h6>
+        <div class="col justify-center">
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="name">Site Name</label>
+                    <div class="col-sm-8"><input class="form-control" type="text" name="name" id="name" value="<?php echo $settings['name']; ?>"></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="email">Echelon Admin Email</label>
+                    <div class="col-sm-8"><input class="form-control" type="text" name="email" value="<?php echo $settings['email']; ?>"></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="admin_name">Name of Site Admin</label>
+                    <div class="col-sm-8"><input class="form-control" type="text" name="admin_name" value="<?php echo $settings['admin_name']; ?>"></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="limit_rows">Max. rows in tables</label>
+                    <div class="col-sm-8"><input class="form-control int" type="text" name="limit_rows" value="<?php echo $settings['limit_rows']; ?>"></div>
+            </div>            
+        </div>
+        
 
-			<input type="text" name="limit_rows" value="<?php echo $settings['limit_rows']; ?>" class="int"><label for="limit_rows">Max rows in tables</label>
-				<?php tooltip('Default number of rows that are shown in tables'); ?><br>
+        <h6 class="my-4">E-Mail Messages and Announcements on Homepage</h6>
+        <div class="col justify-center">
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="newsfeed">Annoucements</label>
+                    <div class="col-sm-8"><textarea class="form-control" rows="4" name="newsfeed"><?php echo $settings['newsfeed']; ?></textarea>
+                    <small>This field supports HTML.</small>	
+                    </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="email_header">Text to start all emails:</label>
+                    <div class="col-sm-8"><textarea class="form-control" rows="4" name="email_header"><?php echo $settings['email_header']; ?></textarea></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="email_footer">Text to end all emails:</label>
+                    <div class="col-sm-8"><textarea class="form-control" rows="4" name="email_footer"><?php echo $settings['email_footer']; ?></textarea></div>
+            </div>
+            <small>There are some variables that can be used in the email templates, <strong>%name%</strong> is replaced with the users name, and <strong>%ech_name%</strong> is replaced with the name of the website (eg. your clan name).</small>	
+        </div>        
 
-		</fieldset>
-		
-		<fieldset class="none email-msg">
-			<legend>Email Messages</legend>
-			
-			<label for="email_header">Text to start all emails:</label><?php tooltip('All emails sent by Echelon will user this email header.'); ?><br />
-				<textarea name="email_header"><?php echo $settings['email_header']; ?></textarea>
-				<br />
-				
-			<label for="email_footer">Text to end all emails:</label><?php tooltip('This template will be appended to the end of all emails'); ?><br />
-				<textarea name="email_footer"><?php echo $settings['email_footer']; ?></textarea>
-				
-			<p class="tip">There are some varibles that can be used in the email templates, <strong>%name%</strong> is replaced with the users name, and <strong>%ech_name%</strong> is replaced with the name of the website (eg. your clan name)</p>	
-				
-		</fieldset>
-		
-		<br class="clear" />
-		
-		<fieldset class="none">
-			<legend>Time Settings</legend>
-			
-			<label for="time_format">Format of time:</label><?php tooltip('This time format will be used for almost all times displayed on the website'); ?>
-				<input type="text" name="time_format" value="<?php echo $settings['time_format']; ?>">
-				<p class="tip">Time format field is the PHP <a class="external" href="http://php.net/manual/en/function.date.php" title="PHP time format setup">time format</a>.</p>
-			
-			<label for="time_zone">Time Zone:</label><?php tooltip('Timezone of your game server or web server'); ?>
-				<input type="text" name="time_zone" value="<?php echo $settings['time_zone']; ?>">
-				<p class="tip">Timezone field uses PHP <a class="external" href="http://php.net/manual/en/timezones.php" title="PHP time zone lisiting">time zones</a>.</p>
-			
-		</fieldset>
-		
-		
-		<fieldset class="none">
-			<legend>Security Settings</legend>
-			
-			<input type="text" name="min_pw_len" value="<?php echo $settings['min_pw_len']; ?>" class="int"><label for="min_pw_len">Minimum password length for users</label><?php tooltip('Minimum length for Echelon user passwords'); ?><br>
-			<input type="text" name="user_key_expire" value="<?php echo $settings['user_key_expire']; ?>" class="int"><label for="user_key_expire">Days a user reg. key is active</label><?php tooltip('Number of days a registration key will remain valid after the time it was created'); ?><br>
-			
-			<input type="checkbox" name="https"<?php if($settings['https'] == 1) echo ' checked="checked"'; ?>><label for="https">SSL connection required</label><br>
-				<p class="tip">Forces HTTPS, only enable if you have an SSL cert. Consult the <a href="http://echelon.bigbrotherbot.com/help/ssl" class="external help-docs">Help Docs</a> before you enable this setting.</p>
-			
-			<input type="checkbox" name="allow_ie"<?php if($settings['allow_ie'] == 1) echo ' checked="checked"'; ?>><label for="allow_ie">Allow Internet Explorer</label><?php tooltip('If unchecked, this bans users from using Internet Explorer anywhere but the Public Ban List page'); ?>
-			
+        <h6 class="my-4">Time Settings</h6>
+        <div class="col justify-center">
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="time_format">PHP Time Format</label>
+                    <div class="col-sm-8"><input class="form-control" type="text" name="time_format" value="<?php echo $settings['time_format']; ?>">
+                    <small>Time format field is the PHP <a class="external" href="http://php.net/manual/en/function.date.php" title="PHP time format setup">time format</a>.</small>
+                    </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="time_zone">PHP Time Zone</label>
+                    <div class="col-sm-8"><input class="form-control" type="text" name="time_zone" value="<?php echo $settings['time_zone']; ?>">
+                    <small class="tip">Timezone field uses PHP <a class="external" href="http://php.net/manual/en/timezones.php" title="PHP time zone lisiting">time zones</a>.</small>
+                    </div>
+            </div>
+        </div>
+
+        <h6>Security Settings</h6>
+        <div class="col justify-center">
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="min_pw_len">Minimum password length for users</label>
+                <div class="col-sm-8">
+                <input type="text" name="min_pw_len" value="<?php echo $settings['min_pw_len']; ?>" class="form-control int">
+                <small>Minimum length for Echelon user passwords</small>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="user_key_expire">Days a reg. key is active</label>
+                <div class="col-sm-8">
+                <input type="text" name="user_key_expire" value="<?php echo $settings['user_key_expire']; ?>" class="form-control int">
+                <small>Number of days a registration key will remain valid after the time it was created</small>
+                </div>
+            </div>
+               
+            <div class="form-group row">
+            <label class="col-sm-4" for="https">SSL connection required</label>
+            
+            <div class="col">
+            <label class="my-1 switch">
+                <input type="checkbox" name="https"<?php if($settings['https'] == 1) echo ' checked="checked"'; ?>>
+                <span class="slider round"></span>
+            </label>
+            </div>
+            <small class="my-1">Forces HTTPS, only enable if you have an SSL certificate.</small>
+            </div>  
+
+            <div class="form-group row">
+            <label class="col-sm-4" for="allow_ie">Allow Internet Explorer</label>
+            
+            <div class="col">
+            <label class="my-1 switch">
+                <input type="checkbox" name="allow_ie"<?php if($settings['allow_ie'] == 1) echo ' checked="checked"'; ?>>
+                <span class="slider round"></span>
+            </label>
+            </div>
+            </div>  
 			<?php if(!$no_games) : ?>
 			
-			<fieldset class="none">
-				<legend>Require password for client level edits</legend>
-				
-				<input type="checkbox" name="pw_req_level"<?php if($settings['pw_req_level'] == 1) echo ' checked="checked"'; ?>><label for="pw_req_level">Require password</label>
-				<select name="pw_req_level_group">
+            <div class="form-group row">
+				<label class="col-sm-4 col-form-label" for="pw_req_level">Require password</label>
+
+                <div class="col">
+                <label class="my-2 switch"> 
+                    <input type="checkbox" name="pw_req_level"<?php if($settings['pw_req_level'] == 1) echo ' checked="checked"'; ?>>
+                    <span class="slider round"></span>
+                    <select class="mx-5 float-left" name="pw_req_level_group">
 					<?php
 						$b3_groups = $db->getB3Groups();
 						foreach($b3_groups as $group) :
@@ -95,30 +135,26 @@ require 'inc/header.php';
 						endforeach;
 					?>
 				</select>
+                </label>
+                </div></div></div>
 				
-			</fieldset>
-			
-			<?php endif; ?>
-		
-		</fieldset>
 
-		<br class="clear" />
-		
-		<fieldset class="none">
-			<legend>Verify Yourself</legend>
-		
-			<label for="verify-pw">Your current password:</label><?php tooltip('Please enter your current Echelon user password so that we know that it is really you editing settings'); ?>
-				<input type="password" name="password" id="verify-pw" />
-		
-		</fieldset>
-		
-		<br class="clear" />
+			<?php endif; ?>
+
+            <hr>
+            <h6 class="my-4">Verify Yourself</h6>
+            <div class="col justify-center">
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="verify-pw">Password</label>
+                        <div class="col-sm-8"><input class="form-control" type="password" name="password" id="verify-pw"></div>
+                </div>
+            </div>  
 		
 		<input type="hidden" name="token" value="<?php echo $token_settings; ?>" />
-		<input type="submit" name="settings-sub" value="Save Echelon Settings" />
+		<button class="btn btn-primary float-right" type="submit" value="Save Echelon Settings" name="settings-sub">Save Settings</button>
 		
 	</form>
-		
-</fieldset>
+</div></div></div>
+
 	
 <?php require 'inc/footer.php'; ?>
