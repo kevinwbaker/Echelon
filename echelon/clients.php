@@ -43,7 +43,7 @@ if($_GET['s']) {
 
 if($_GET['t']) {
 	$search_type = $_GET['t']; //  no need to escape it will be checked off whitelist
-	$allowed_search_type = array('all', 'alias', 'pbid', 'ip', 'id', 'aliastable', 'ipaliastable');
+	$allowed_search_type = array('all', 'alias', 'guid', 'ip', 'id', 'aliastable', 'ipaliastable');
 	if(!in_array($search_type, $allowed_search_type))
 		$search_type = 'all'; // if not just set to default all
 }
@@ -64,8 +64,8 @@ if($is_search == true) : // IF SEARCH
 	} elseif($search_type == 'id') { // ID
 		$query .= "AND c.id LIKE '%$search_string%' ORDER BY $orderby";
 		
-	} elseif($search_type == 'pbid') { // PBID
-		$query .= "AND c.pbid LIKE '%$search_string%' ORDER BY $orderby";
+	} elseif($search_type == 'guid') { // GUID
+		$query .= "AND c.guid LIKE '%$search_string%' ORDER BY $orderby";
 		
 	} elseif($search_type == 'ip') { // IP
 		$query .= "AND c.ip LIKE '%$search_string%' ORDER BY $orderby";
@@ -77,7 +77,7 @@ if($is_search == true) : // IF SEARCH
 		$query = "SELECT client_id AS id, ip AS name, time_edit, time_add FROM ipaliases WHERE ip LIKE '%$search_string%' ORDER BY $orderby";
 
 	}else { // ALL
-		$query .= "AND c.name LIKE '%$search_string%' OR c.pbid LIKE '%$search_string%' OR c.ip LIKE '%$search_string%' OR c.id LIKE '%$search_string%'
+		$query .= "AND c.name LIKE '%$search_string%' OR c.guid LIKE '%$search_string%' OR c.ip LIKE '%$search_string%' OR c.id LIKE '%$search_string%'
 			ORDER BY $orderby";
 	}
 else : // IF NOT SEARCH
@@ -114,8 +114,8 @@ if(!$db->error) :
 				echo 'You are searching all alias names for <strong>'.$search_string.'</strong>. There are <strong>'. $total_rows .'</strong> entries matching your request.';
             elseif($search_type == 'ipaliastable')
 				echo 'You are searching all client IP-alias names for <strong>'.$search_string.'</strong>. There are <strong>'. $total_rows .'</strong> entries matching your request.';
-			elseif($search_type == 'pbid')
-				echo 'You are searching all clients Punkbuster Guids for <strong>'.$search_string.'</strong>. There are <strong>'. $total_rows .'</strong> entries matching your request.';
+			elseif($search_type == 'guid')
+				echo 'You are searching all clients GUIDs for <strong>'.$search_string.'</strong>. There are <strong>'. $total_rows .'</strong> entries matching your request.';
 			elseif($search_type == 'id')
 				echo 'You are searching all clients B3 IDs for <strong>'.$search_string.'</strong>. There are <strong>'. $total_rows .'</strong> entries matching your request.';
 			elseif($search_type == 'ip')

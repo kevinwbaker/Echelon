@@ -354,7 +354,7 @@ require 'inc/header.php';
 	## Get Echelon Logs Client Logs (NOTE INFO IN THE ECHELON DB) ##
 	$ech_logs = $dbl->getEchLogs($cid, $game);
 	
-	$count = count((array) $ech_logs);
+	$count = count((array)$ech_logs);
 	if($count > 0) : // if there are records
 ?>
 <li class="nav-item">
@@ -549,7 +549,7 @@ EOD;
 	## Get Echelon Logs Client Logs (NOTE INFO IN THE ECHELON DB) ##
 	$ech_logs = $dbl->getEchLogs($cid, $game);
 	
-	$count = count((array) $ech_logs);
+	$count = count((array)$ech_logs);
 	if($count > 0) : // if there are records
 ?>
 <div id="echelon" class="tab-pane fade table table-hover table-responsive table-sm" role="tabpanel" aria-labelledby="echelon-tab">
