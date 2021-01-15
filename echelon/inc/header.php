@@ -202,7 +202,7 @@ date_default_timezone_set($_SESSION['timezone']);
 		<select class="custom-select custom-select-sm col-md-5" name="t">
 			<option value="all" <?php if($search_type == "all") echo 'selected="selected"' ?>>All Records</option>
 			<option value="alias" <?php if($search_type == "alias") echo 'selected="selected"' ?>>Name</option>
-			<option value="pbid" <?php if($search_type == "pbid") echo 'selected="selected"' ?>>PBID</option>
+			<option value="guid" <?php if($search_type == "guid") echo 'selected="selected"' ?>>GUID</option>
 			<option value="ip" <?php if($search_type == "ip") echo 'selected="selected"' ?>>IP Address</option>
 			<option value="id" <?php if($search_type == "id") echo 'selected="selected"' ?>>Player ID</option>
             <option>===========</option>

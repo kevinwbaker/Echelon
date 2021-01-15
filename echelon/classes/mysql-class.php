@@ -313,7 +313,7 @@ class DB_B3 {
 	 * Get the guid of the client from a penalty id, similar to pbid
 	 *
 	 * @param string $pen_id - id of penalty to search with
-	 * @return string - pbid of the client
+	 * @return string - guid of the client
 	 */
     function getGUIDfromPID($pen_id) {
 		$query = "SELECT c.guid FROM penalties p LEFT JOIN clients c ON p.client_id = c.id WHERE p.id = ? LIMIT 1";
